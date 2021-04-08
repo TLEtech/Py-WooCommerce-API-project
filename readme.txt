@@ -7,3 +7,6 @@ on preset parameters and up-to-date information
 Log:
 
 4-8-21 - Began repo.
+
+Callback URL is not returning tokens, even though it returns a successful authorization,
+and the keys appear in the API Keys page.
