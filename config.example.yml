@@ -1,0 +1,6 @@
+# Input variables here
+
+WooCommerce:
+  apiKey: ExampleKey
+  apiSecret: ExampleSecret
+  baseURL: https://example.url
