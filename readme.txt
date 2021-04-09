@@ -11,4 +11,5 @@ Callback URL is not returning tokens, even though it returns a successful author
 and the keys appear in the API Keys page.
 
 4-9-21 - Auth successful
-Successful OAuth1 authentication achieved.
+Successful OAuth1 authentication achieved. Successfully managed to update prices on a test run.
+Next step is to work on grabbing local data and comparing it to remote data.

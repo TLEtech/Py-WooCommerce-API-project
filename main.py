@@ -1,11 +1,12 @@
 import pandas as pd
+import json
 import requests
 from requests_oauthlib import OAuth1Session
 from urllib.parse import urlencode
 from woocommerce import API
 import yaml
 
-# Retrieve config info
+# Retrieve config info - fill out config.example.yml as needed, and rename it to config.yml
 with open("config.yml", 'r') as configInfo:
     config = yaml.safe_load(configInfo)
 # Set variables
@@ -19,10 +20,15 @@ CallbackURL = config['WC']['callbackURL']
 WcVersion = config['WC']['wcVersion']
 # Endpoints
 AuthEndpoint = BaseURL + config['WC']['endpoints']['auth']
-ProductEndpoint = BaseURL + config['WC']['endpoints']['product']
+ProductsEndpoint = BaseURL + config['WC']['endpoints']['products']
 OrdersEndpoint = BaseURL + config['WC']['endpoints']['orders']
+CategoriesEndpoint = BaseURL + config['WC']['endpoints']['categories']
 
-# Generate API connect variables
+# We will be using Oauth1 for the purposes of this solution, so we do not need to
+# worry about utilizing API callbacks just yet. I will provide the info in case
+# we want to come back to it later.
+
+# Generate API connect variables for automated key generation, if needed later
 params = {
     "app_name": AppName,
     "scope": "read_write",
@@ -44,15 +50,8 @@ QueryString = urlencode(params)
 KeyURL = ("%s?%s" % (AuthEndpoint, QueryString))
 
 # Create OAuth1 Session
-test = OAuth1Session(ApiKey,
-                     client_secret=ApiSecret)
+Retrieve = OAuth1Session(ApiKey,
+                         client_secret=ApiSecret)
 
-# Test the OAuth1 Session
-TestOrdersEndpoint = test.get(OrdersEndpoint)
-TestProductEndpoint = test.get(ProductEndpoint + config['TestInfo']['TestProductID'])
-
-# Works!
-print(TestOrdersEndpoint.json())
-print(TestProductEndpoint.json())
-
-
+# In Progress
+print(Retrieve.get(CategoriesEndpoint).json())
