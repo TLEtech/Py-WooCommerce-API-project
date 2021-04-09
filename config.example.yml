@@ -1,6 +1,15 @@
 # Input variables here
 
-WooCommerce:
-  apiKey: ExampleKey
-  apiSecret: ExampleSecret
-  baseURL: https://example.url
+WC:
+  apiKey: #ck_#####################
+  apiSecret: #cs_##################
+  appName: #AppName#
+  userID: #id#
+  baseURL: #https://website.com#
+  returnURL: #https://website.com/return#
+  callbackURL: #https://website.com/callback#
+  wcVersion: #wc/v3#
+  endpoints:
+    product: /wp-json/wc/v3/products/
+    auth: /wc-auth/v1/authorize
+    orders: /wp-json/wc/v3/orders
