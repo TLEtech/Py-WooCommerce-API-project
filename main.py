@@ -1,10 +1,12 @@
 import pandas as pd
 import json
 import requests
-from requests_oauthlib import OAuth1Session
+from requests import utils
+from requests_oauthlib import OAuth1Session, OAuth1
 from urllib.parse import urlencode
 from woocommerce import API
 import yaml
+import data
 
 # Retrieve config info - fill out config.example.yml as needed, and rename it to config.yml
 with open("config.yml", 'r') as configInfo:
@@ -19,6 +21,10 @@ UserID = config['WC']['userID']
 ReturnURL = config['WC']['returnURL']
 CallbackURL = config['WC']['callbackURL']
 WcVersion = config['WC']['wcVersion']
+Filter_Products = config['ETL']['FilterPrice']
+PriceParams = {'status': 'publish',
+               'type': 'variable',
+               'per_page': 50}
 
 # Endpoints
 AuthEndpoint = BaseURL + config['WC']['endpoints']['auth']
@@ -44,7 +50,8 @@ wcAPI = API(
     url=BaseURL,
     consumer_key=ApiKey,
     consumer_secret=ApiSecret,
-    version=WcVersion
+    version=WcVersion,
+    wp_api=True
 )
 
 # If API Callback is needed (for automated key generation), we can print out and follow the KeyURL.
@@ -52,8 +59,46 @@ QueryString = urlencode(params)
 KeyURL = ("%s?%s" % (AuthEndpoint, QueryString))
 
 # Create OAuth1 Session
-Retrieve = OAuth1Session(ApiKey,
-                         client_secret=ApiSecret)
+# Retrieve = OAuth1Session(ApiKey, client_secret=ApiSecret)
+AppAuth = OAuth1(ApiKey, ApiSecret)
 
 # In Progress
-print(Retrieve.get(CategoriesEndpoint).json())
+LocalPriceDF = data.df
+LocalPriceJSON = LocalPriceDF.to_json(orient="records")
+
+WebsitePriceList = (requests.get(ProductsEndpoint, auth=AppAuth, params=PriceParams).json())
+WebsitePriceBase = (requests.get(ProductsEndpoint, auth=AppAuth, params=PriceParams))
+
+# Use List Comprehension to morph the product list to a more manageable size.
+# For more info on List Comprehension: https://www.w3schools.com/python/python_lists_comprehension.asp
+for item in WebsitePriceList:
+    [item.pop(key) for key in Filter_Products]
+
+UpdateSource = json.loads(LocalPriceJSON)
+UpdateTarget = WebsitePriceList
+
+NextLink = requests.get(ProductsEndpoint, auth=AppAuth, params=PriceParams).links['next']['url']
+
+# Working on this still.
+while NextLink:
+    UpdateTargetAddon = requests.get(NextLink, auth=AppAuth).json()
+    for item in UpdateTargetAddon:
+        [item.pop(key) for key in Filter_Products]
+    UpdateTarget.extend(UpdateTargetAddon)
+    if requests.get(NextLink, auth=AppAuth).links['next']['url']:
+        try:
+            NextLink = requests.get(NextLink, auth=AppAuth).links['next']['url']
+        except KeyError('next'):
+            pass
+    elif NextLink is False:
+        NextLink = 0
+        pass
+'''
+while NextLink:
+    UpdateTargetAddon = requests.get(NextLink, auth=AppAuth).json()
+    for item in UpdateTargetAddon:
+        [item.pop(key) for key in Filter_Products]
+    UpdateTarget.extend(UpdateTargetAddon)
+    while requests.get(NextLink, auth=AppAuth).links['next']['url']:
+        NextLink = requests.get(NextLink, auth=AppAuth).links['next']['url']
+'''

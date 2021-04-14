@@ -6,17 +6,20 @@ import json
 # Variables
 with open("config.yml", 'r') as configInfo:
     config = yaml.safe_load(configInfo)
-Server = config['DBC']['server']
-DB = config['DBC']['DB']
+ServerName = config['DBC']['server']
+DBname = config['DBC']['DB']
 DBuser = config['DBC']['ReadUser']
 DBuserPW = config['DBC']['PW']
 ReadTable = config['DBC']['ReadTable']
 ReadQuery = config['DBC']['ReadQuery']
+ReadWhere = config['DBC']['ReadWhereStmt']
+ReadOrderBy = config['DBC']['ReadOrderByStmt']
 
-Conn = dbc.connect('DRIVER={SQL Server};SERVER='+Server+';DATABASE='+DB+';UID='+DBuser+';PWD='+DBuserPW)
+# Create
+Conn = dbc.connect('DRIVER={SQL Server};SERVER='+ServerName+';DATABASE='+DBname+';UID='+DBuser+';PWD='+DBuserPW)
 Cursor = Conn.cursor()
 
-ReadQueryStmt = (ReadQuery+ReadTable)
+ReadQueryStmt = (ReadQuery+ReadTable+ReadWhere+ReadOrderBy)
 
 df = pd.read_sql(ReadQueryStmt, Conn)
 
