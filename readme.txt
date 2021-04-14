@@ -13,3 +13,6 @@ and the keys appear in the API Keys page.
 4-9-21 - Auth successful
 Successful OAuth1 authentication achieved. Successfully managed to update prices on a test run.
 Next step is to work on grabbing local data and comparing it to remote data.
+
+4-14-21 - Beginning DB Connection
+Beginning DB connection phase of this project. Created data.py for DB connection and queries.

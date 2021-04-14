@@ -15,3 +15,11 @@ WC:
     orders: /wp-json/wc/v3/orders
     categories: /wp-json/wc/v3/products/categories
     variations: /variations/
+
+DBC:
+  server: 'DatabaseServer'
+  DB: 'Database'
+  ReadUser: 'DB Read User'
+  PW: 'Read User Password'
+  ReadTable: '[Database].[Schema].[Table/View]'
+  ReadQuery: 'SELECT [Column1], [Column2], [Column3] FROM '

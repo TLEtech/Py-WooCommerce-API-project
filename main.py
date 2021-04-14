@@ -9,6 +9,7 @@ import yaml
 # Retrieve config info - fill out config.example.yml as needed, and rename it to config.yml
 with open("config.yml", 'r') as configInfo:
     config = yaml.safe_load(configInfo)
+
 # Set variables
 ApiKey = config['WC']['apiKey']
 ApiSecret = config['WC']['apiSecret']
@@ -18,6 +19,7 @@ UserID = config['WC']['userID']
 ReturnURL = config['WC']['returnURL']
 CallbackURL = config['WC']['callbackURL']
 WcVersion = config['WC']['wcVersion']
+
 # Endpoints
 AuthEndpoint = BaseURL + config['WC']['endpoints']['auth']
 ProductsEndpoint = BaseURL + config['WC']['endpoints']['products']
