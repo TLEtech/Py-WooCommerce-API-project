@@ -15,11 +15,13 @@ ReadQuery = config['DBC']['ReadQuery']
 ReadWhere = config['DBC']['ReadWhereStmt']
 ReadOrderBy = config['DBC']['ReadOrderByStmt']
 
-# Create
+# Create database connection and cursor
 Conn = dbc.connect('DRIVER={SQL Server};SERVER='+ServerName+';DATABASE='+DBname+';UID='+DBuser+';PWD='+DBuserPW)
 Cursor = Conn.cursor()
 
+# Assemble query statements
 ReadQueryStmt = (ReadQuery+ReadTable+ReadWhere+ReadOrderBy)
 
+# Create Pandas dataframe for testing.
 df = pd.read_sql(ReadQueryStmt, Conn)
 
