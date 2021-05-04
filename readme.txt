@@ -17,3 +17,5 @@ Next step is to work on grabbing local data and comparing it to remote data.
 4-14-21 - Beginning DB Connection
 Beginning DB connection phase of this project. Created data.py for DB connection and queries.
 Beginning work on loops for price update automation (still very messy, needs cleanup)
+
+5-4-21 - Updated Product Addition Loop

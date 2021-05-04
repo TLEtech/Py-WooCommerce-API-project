@@ -79,20 +79,19 @@ UpdateTarget = WebsitePriceList
 
 NextLink = requests.get(ProductsEndpoint, auth=AppAuth, params=PriceParams).links['next']['url']
 
-# Working on this still.
+# Product Update Addition Loop
 while NextLink:
     UpdateTargetAddon = requests.get(NextLink, auth=AppAuth).json()
     for item in UpdateTargetAddon:
         [item.pop(key) for key in Filter_Products]
     UpdateTarget.extend(UpdateTargetAddon)
-    if requests.get(NextLink, auth=AppAuth).links['next']['url']:
-        try:
+    try:
+        if requests.get(NextLink, auth=AppAuth).links['next']['url']:
+            print('Going to next page...')
             NextLink = requests.get(NextLink, auth=AppAuth).links['next']['url']
-        except KeyError('next'):
-            pass
-    elif NextLink is False:
-        NextLink = 0
-        pass
+    except KeyError:
+        print('Reached end of applicable products list. Moving on...')
+        break
 '''
 while NextLink:
     UpdateTargetAddon = requests.get(NextLink, auth=AppAuth).json()
